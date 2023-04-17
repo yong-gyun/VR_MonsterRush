@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PoolSpawning : MonoBehaviour
 {
@@ -33,10 +34,6 @@ public class PoolSpawning : MonoBehaviour
             spawnPoint[i] = transform.Find($"SpawnPoint_{i + 1}");
         }
 
-        _wolf = Managers.Resource.Load<GameObject>("Prefabs/Character/Wolf");
-        _inferno = Managers.Resource.Load<GameObject>("Prefabs/Character/Inferno");
-        _crab = Managers.Resource.Load<GameObject>("Prefabs/Character/Crab");
-
         waveCorutine = FirstWave();
         StartCoroutine(waveCorutine);
     }
@@ -48,13 +45,13 @@ public class PoolSpawning : MonoBehaviour
         switch (type)
         {
             case Define.MobType.Wolf:
-                go = Managers.Resource.Instantiate("Character/Wolf", spawnPoint[idx].position, Quaternion.identity);
+                go = Managers.Resource.Instantiate("Character/Wolf");
                 break;
             case Define.MobType.InfernoDragon:
-                go = Managers.Resource.Instantiate("Character/Inferno", spawnPoint[idx].position, Quaternion.identity);
+                go = Managers.Resource.Instantiate("Character/Inferno");
                 break;
             case Define.MobType.Crab:
-                go = Managers.Resource.Instantiate("Character/Crab", spawnPoint[idx].position, Quaternion.identity);
+                go = Managers.Resource.Instantiate("Character/Crab");
                 break;
         }
 
@@ -63,6 +60,11 @@ public class PoolSpawning : MonoBehaviour
         Managers.Game.mobs.Add(mob);
         mob.Init(_currentWave);
         mob._hpBar.OnUpdateUI(mob.MaxHP);
+
+        mob.GetComponent<NavMeshAgent>().enabled = false;
+        mob.transform.position = spawnPoint[idx].position;
+        mob.GetComponent<NavMeshAgent>().enabled = true;
+
         return mob;
     }
 

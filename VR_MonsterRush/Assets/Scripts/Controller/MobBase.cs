@@ -182,7 +182,6 @@ public class MobBase : MonoBehaviour
 
     public virtual void OnDie()
     {
-        Debug.Log($"Die {name}");
         Managers.Game.mobs.Remove(this);
         Managers.Resource.Destroy(gameObject);
     }

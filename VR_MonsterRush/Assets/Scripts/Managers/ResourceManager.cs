@@ -55,6 +55,9 @@ public class ResourceManager
 
     public void Destroy(GameObject go, float time = 0)
     {
+        if (go == null)
+            return;
+
         Poolable poolable = go.GetComponent<Poolable>();
 
         if(poolable != null)
