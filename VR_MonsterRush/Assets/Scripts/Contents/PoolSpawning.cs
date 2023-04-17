@@ -37,27 +37,28 @@ public class PoolSpawning : MonoBehaviour
         _inferno = Managers.Resource.Load<GameObject>("Prefabs/Character/Inferno");
         _crab = Managers.Resource.Load<GameObject>("Prefabs/Character/Crab");
 
-
         waveCorutine = FirstWave();
         StartCoroutine(waveCorutine);
     }
 
     MobBase GetMob(Define.MobType type, int idx = 0)
     {
-        MobBase mob = null;
-
+        GameObject go = null;
+        
         switch (type)
         {
             case Define.MobType.Wolf:
-                 mob = Managers.Pool.Pop(_wolf, spawnPoint[idx].position).GetComponent<MobBase>();
+                go = Managers.Resource.Instantiate("Character/Wolf", spawnPoint[idx].position, Quaternion.identity);
                 break;
             case Define.MobType.InfernoDragon:
-                mob = Managers.Pool.Pop(_inferno, spawnPoint[idx].position).GetComponent<MobBase>();
+                go = Managers.Resource.Instantiate("Character/Inferno", spawnPoint[idx].position, Quaternion.identity);
                 break;
             case Define.MobType.Crab:
-                mob = Managers.Pool.Pop(_crab, spawnPoint[idx].position).GetComponent<MobBase>();
+                go = Managers.Resource.Instantiate("Character/Crab", spawnPoint[idx].position, Quaternion.identity);
                 break;
         }
+
+        MobBase mob = go.GetComponent<MobBase>();
 
         Managers.Game.mobs.Add(mob);
         mob.Init(_currentWave);

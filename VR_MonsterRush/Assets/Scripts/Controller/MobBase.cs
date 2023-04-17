@@ -26,9 +26,7 @@ public class MobBase : MonoBehaviour
     
     protected int _myScore;
     protected int _myGold;
-    static int _avoidance = 30;
-
-
+    
     public Transform Target
     {
         get
@@ -71,6 +69,8 @@ public class MobBase : MonoBehaviour
             }
         }
     }
+
+    static int _avoidance = 30;
 
     protected virtual void Awake()
     {
@@ -184,6 +184,6 @@ public class MobBase : MonoBehaviour
     {
         Debug.Log($"Die {name}");
         Managers.Game.mobs.Remove(this);
-        Managers.Pool.Push(GetComponent<Poolable>());
+        Managers.Resource.Destroy(gameObject);
     }
 }

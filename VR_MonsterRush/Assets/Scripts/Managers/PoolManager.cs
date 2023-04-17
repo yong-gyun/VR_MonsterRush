@@ -2,16 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class PoolManager
 {
     #region //Pool
-    public class Pool
+    class Pool
     {
         public GameObject Original { get; private set; }
         public Transform Root { get; set; }
-        public Stack<Poolable> _poolStack { get; private set; } = new Stack<Poolable>();
+        Stack<Poolable> _poolStack = new Stack<Poolable>();
 
         public void Init(GameObject original, int count = 5)
         {
@@ -44,7 +43,7 @@ public class PoolManager
             _poolStack.Push(poolable);
         }
 
-        public Poolable Pop(Vector3 position, Transform parent)
+        public Poolable Pop(Transform parent)
         {
             Poolable poolable = null;
 
@@ -58,25 +57,17 @@ public class PoolManager
             if (parent == null)
                 parent = Managers.Scene.CurrentScene.transform;
 
-            NavMeshAgent nav = poolable.GetComponent<NavMeshAgent>();
+            UnityEngine.AI.NavMeshAgent nav = poolable.GetComponent<UnityEngine.AI.NavMeshAgent>();
 
             if (nav != null)
             {
                 nav.enabled = false;
-
-                poolable.transform.SetParent(parent);
-                poolable.IsUsing = true;
-                poolable.transform.position = position;
-
                 nav.enabled = true;
-                
-                return poolable;
             }
                 
 
             poolable.transform.SetParent(parent);
             poolable.IsUsing = true;
-            poolable.transform.position = position;
             return poolable;
         }
     }
@@ -92,10 +83,6 @@ public class PoolManager
             _root = new GameObject { name = "@Pool_Root" }.transform;
             UnityEngine.Object.DontDestroyOnLoad(_root);
         }
-
-        CreatePool(Managers.Resource.Load<GameObject>("Prefabs/Character/Wolf"), 20);
-        CreatePool(Managers.Resource.Load<GameObject>("Prefabs/Character/Inferno"), 20);
-        CreatePool(Managers.Resource.Load<GameObject>("Prefabs/Character/Crab"), 20);
     }
 
     public void CreatePool(GameObject original, int count = 5)
@@ -113,18 +100,19 @@ public class PoolManager
 
         if(_pool.ContainsKey(name) == false)
         {
-            GameObject.Destroy(poolable);
+            UnityEngine.Object.Destroy(poolable);
             return;
         }
 
         _pool[name].Push(poolable);
     }
 
-    public Poolable Pop(GameObject original, Vector3 position, Transform parent = null)
+    public Poolable Pop(GameObject original, Transform parent = null)
     {
         if (_pool.ContainsKey(original.name) == false)
             return null;
-        Poolable pool = _pool[original.name].Pop(position, parent);
+
+        Poolable pool = _pool[original.name].Pop(parent);
         return pool;
     }
 

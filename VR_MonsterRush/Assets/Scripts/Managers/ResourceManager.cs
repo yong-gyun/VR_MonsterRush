@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ResourceManager
 {
@@ -24,6 +25,11 @@ public class ResourceManager
         if (prefab == null) 
             return null;
 
+        if(prefab.GetComponent<Poolable>() != null)
+        {
+            return Managers.Pool.Pop(prefab).gameObject;
+        }
+
         GameObject go = Object.Instantiate(prefab, parent);
 
         int index = go.name.IndexOf("(Clone)");
@@ -34,25 +40,29 @@ public class ResourceManager
         return go;
     }
 
-    public GameObject Instantiate(string path, Vector3 postion, Quaternion rotation, Transform parent = null)
+    public GameObject Instantiate(string path, Vector3 position, Quaternion rotation, Transform parent = null)
     {
-        GameObject prefab= Load<GameObject>($"Prefabs/{path}");
+        GameObject go = Instantiate(path, parent);
 
-        if (prefab == null)
+        if (go == null)
             return null;
 
-        GameObject go = Object.Instantiate(prefab, postion, rotation, parent);
-
-        int index = go.name.IndexOf("(Clone)");
-
-        if (index > 0)
-            go.name = go.name.Substring(0, index);
+        go.transform.position = position;
+        go.transform.rotation = rotation;
 
         return go;
     }
 
     public void Destroy(GameObject go, float time = 0)
     {
+        Poolable poolable = go.GetComponent<Poolable>();
+
+        if(poolable != null)
+        {
+            Managers.Pool.Push(poolable);
+            return;
+        }
+
         Object.Destroy(go, time);
     }
 }

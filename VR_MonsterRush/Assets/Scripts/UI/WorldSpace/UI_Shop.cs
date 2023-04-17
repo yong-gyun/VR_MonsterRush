@@ -72,6 +72,26 @@ public class UI_Shop : UI_WorldSpace
         GetText((int)Texts.FireSpeedStatText).text = $"{Managers.Game.Player.fireSpeed}";
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            OnBuyDamageBoom();
+        }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            OnBuySlowBoom();
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            OnBuyStunBoom();
+        }
+
+
+    }
+
     void OnBuyDamageBoom()
     {
         Managers.Sound.PlaySoundEffect(Define.SoundEffect.Click);
