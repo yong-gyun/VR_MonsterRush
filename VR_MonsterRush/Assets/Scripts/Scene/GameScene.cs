@@ -10,7 +10,7 @@ public class GameScene : SceneBase
 
         Managers.UI.Clear();
 
-        Managers.Game.CurrentGold = 10000;
+        Managers.Game.CurrentGold = 100;
         Managers.Game.CurrentScore = 0;
         Managers.Game.Player.transform.position = new Vector3(-1, 13, 2.5f);
         Managers.Game.Player.transform.rotation = Quaternion.Euler(-1, 180, 2.5f);

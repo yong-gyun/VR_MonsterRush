@@ -20,7 +20,7 @@ public class Tower : MonoBehaviour
 
         _hp = _maxHP;
         tag = "Tower";
-        isHit = true;
+        isHit = false;
     }
 
     public void OnDamaged(float damage)

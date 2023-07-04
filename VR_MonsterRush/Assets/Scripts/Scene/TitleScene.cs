@@ -7,7 +7,6 @@ public class TitleScene : SceneBase
     public override void Init()
     {
         base.Init();
-
         Managers.Sound.PlayBGM(Define.BGM.Title);
     }
 }

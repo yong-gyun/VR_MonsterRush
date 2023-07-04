@@ -14,6 +14,7 @@ public class MobBase : MonoBehaviour
     
     protected Animator _animator;
     protected Transform _target;
+    protected Collider _col;
     protected Dictionary<int, MobStat> _stat;
     
     [SerializeField] protected Define.State _state;
@@ -80,6 +81,7 @@ public class MobBase : MonoBehaviour
         _agent.radius = 0.35f;
         _agent.angularSpeed = 0f;
         _hpBar = Managers.UI.MakeWorldSpaceUI<UI_HpBar>(transform);
+        _col = GetComponent<Collider>();
     }
 
     protected virtual void Update()
@@ -106,6 +108,7 @@ public class MobBase : MonoBehaviour
         _hp = MaxHP;
         _state = Define.State.Move;
         _agent.speed = _speed;
+        _col.enabled = true;
     }
 
     protected virtual void UpdateMove()
@@ -152,6 +155,7 @@ public class MobBase : MonoBehaviour
         if (_hp <= 0)
         {
             State = Define.State.Die;
+            _col.enabled = false;
 
             if (hit == Define.Hit.Bomb)
                 _myGold = (4 / 10) * _myGold;

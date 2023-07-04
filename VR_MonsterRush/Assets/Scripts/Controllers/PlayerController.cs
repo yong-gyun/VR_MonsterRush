@@ -41,27 +41,28 @@ public class PlayerController : MonoBehaviour
         //l_firePos = Util.FindChild(leftGun, "FirePos", true).transform;
     }
 
+    int _targetLayer = 1 << 7 | 1 << 8;
 
     IEnumerator RightFire()
     {
-        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() || isRightFire == true)
+        if (isRightFire)
             yield break;
 
         Ray ray = new Ray(ARAVRInput.RHandPosition, ARAVRInput.RHandDirection);
         RaycastHit hit;
 
         ARAVRInput.PlayVibration(ARAVRInput.Controller.RTouch);
-        GameObject shotParticle = Managers.Resource.Instantiate($"Effect/ShotParticle", r_firePos.position, Quaternion.Euler(-90, 0, 0));
+        Managers.Resource.Instantiate($"Effect/ShotParticle", r_firePos.position, Quaternion.Euler(-90, 0, 0));
         Managers.Sound.PlaySoundEffect(Define.SoundEffect.Fire);
 
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, _targetLayer))
         {
             if (hit.transform.gameObject.CompareTag("Mob"))
             {
                 hit.transform.GetComponent<MobBase>().OnDamaged(damage, Define.Hit.Bullet);
             }
 
-            GameObject hitParticle = Managers.Resource.Instantiate("Effect/HitParticle", hit.point, Quaternion.identity);
+            Managers.Resource.Instantiate("Effect/HitParticle", hit.point, Quaternion.identity);
         }
 
         isRightFire = true;
